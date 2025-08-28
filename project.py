@@ -1,5 +1,6 @@
 
 import json
+import datetime
 class students_record:
    
    def __init__(self):
@@ -19,45 +20,77 @@ class students_record:
     correct_username = "Anshul"
     correct_password = "Anshul@123"
 
-    enter_username = input("enter user name:  ")
-    enter_password = input ("enter password :  ")
-    
+    for attempt in range (3):
+       enter_username = input("enter user name:  ")
+       enter_password = input ("enter password :  ")
 
-    if enter_username == correct_username and enter_password == correct_password:
-        print("admin login successfully ")
-        self.logged_in = True
-    else:
-        print("invalid id password")
-
+       if enter_username == correct_username and enter_password == correct_password:
+                  print("admin login successfully ")
+                  self.logged_in = True
+                  break 
+       else:
+      
+         print("invalid id password enter again ")
+    if self.logged_in == False:
+      print("--")
   
 
 
    def add_student(self):
     name = input("enter the student name:  ")
     roll_no = input("enter the roll no:  ")
-    self.students.append({"name": name, "roll_no": roll_no})
-    print(f"{name} and {roll_no}")
+     
+    for student in self.students:
+       if student["roll_no"] == roll_no:
+          print("roll no. is already exists")
+          return
+       
+    self.students.append({
+          "name": name,
+           "roll_no": roll_no,
+           "attendance":[]
+       })
+    print(f"{name} (Roll No: {roll_no}) added successfully.")
+    print(f"the total no. of students is: {len(self.students)}")
+    self.save_student()
 
-
-   def attendence(self):
+ 
+   def attendance(self):
     found = False
     roll_no= input("enter the roll no:  ")
     for student in self.students:
         if student ["roll_no"] == roll_no:
             found = True
             print ("present")
+            today = str(datetime.date.today())
+            print(today)
+            student["attendance"].append(today)  
             break
     if not found :
             print("invalid roll no:  .")
+    self.save_student()
+   
+
 
    def view_students(self):
-   
     if not self.students:
         print("it is empty")
     else:
         print("students")
         for i, name in enumerate(self.students, start=1):
            print(f"{i}. {name['name']} (Roll No: {name['roll_no']})")
+    
+   def search(self):
+      
+      roll_no = input("enter the roll no:  ").strip()
+      for student in self.students:
+         if student ["roll_no"] == roll_no:
+            print("student data :")
+            for key, value in student.items():
+               print (f"{key} : {value}")
+            return
+      print ("roll no. is not valid: ")
+            
 
 
    def remove_student(self):
@@ -71,6 +104,7 @@ class students_record:
             break
     if not found:
             print("student not found") 
+    self.save_student()
 
    def save_student(self):
     so = json.dumps(self.students) 
@@ -81,10 +115,15 @@ class students_record:
    def run(self):
     while True:
      print("1. add student: ")
-     print("2. attendence: ")
+     print("---------")
+     print("2. attendance: ")
+     print("---------")
      print("3. view students: ")
+     print("---------")
      print("4. want to remove student:  ")
-     print("5. want to save student detils:  ")
+     print("---------")
+     print("5. search student by roll no.:" )
+     print("---------")
      print("6. exit program")
 
      select = input("select an option (1-6):  ")
@@ -92,13 +131,13 @@ class students_record:
      if select == "1":
        self.add_student()
      elif select == "2":
-        self.attendence()
+        self.attendance()
      elif select == "3":
         self.view_students()
      elif select == "4":
        self.remove_student()
      elif select == "5":
-        self.save_student()
+        self.search ()
      elif select == "6":
         print("exiting.....")
         break
@@ -111,4 +150,4 @@ obj.admin_login()
 if obj.logged_in:
   obj.run()
 else:
-   print("accessed denied !")
+   print("access denied !")
