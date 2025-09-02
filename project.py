@@ -106,6 +106,64 @@ class students_record:
             print("student not found") 
     self.save_student()
 
+
+
+   def update_name(self, student):
+      print(f"Current name: {student['name']}")
+      new_name = input("ENTER NEW NAME:  ").strip()
+
+      if not new_name:
+         print("name cannot be empty")
+         return
+        
+      student["name"] = new_name
+      print(f"Name updated successfully to {new_name}.")
+      self.save_student()
+
+   def update_roll(self , student):
+      print(f"Current roll_no: {student['roll_no']}")
+      new_roll = input("ENTER NEW ROLL NO.:  ").strip()
+
+      if not new_roll:
+         print("roll no. cannot be empty")
+         return
+        
+      student["roll_no"] = new_roll
+      print(f"roll_no.  updated successfully to {new_roll}.")
+      self.save_student()
+
+      
+   def update_record(self):
+    found = False
+    roll_no = input("enter the roll no:  ").strip()  
+    for student in self.students:
+       if student ["roll_no"] == roll_no:
+          found = True
+          print("choose option to update")
+          while True:
+             print("------update menu------")
+             print("1. Update Name:  ")
+             print("---------")
+             print("2.update roll_no: ")
+             print("---------")
+             print("3. exit")
+             print("-------------------")
+
+             select= input("select an option (1-3) ")
+             if select== '1':
+                self.update_name(student)
+
+             elif select== '2':
+                self.update_roll(student)
+
+             elif select == "3":
+                print("exit.....")
+                return
+             else :
+                print("invalid choise")
+    if not found:
+     print("roll no. not found")
+
    def save_student(self):
     so = json.dumps(self.students) 
     with open("record.txt","w") as f:
@@ -122,11 +180,13 @@ class students_record:
      print("---------")
      print("4. want to remove student:  ")
      print("---------")
-     print("5. search student by roll no.:" )
+     print("5. want to update an record:  ")
      print("---------")
-     print("6. exit program")
+     print("6. search student by roll no.:" )
+     print("---------")
+     print("7. exit program")
 
-     select = input("select an option (1-6):  ")
+     select = input("select an option (1-7):  ")
 
      if select == "1":
        self.add_student()
@@ -137,9 +197,11 @@ class students_record:
      elif select == "4":
        self.remove_student()
      elif select == "5":
-        self.search ()
+        self.update_record ()
      elif select == "6":
-        print("exiting.....")
+        self.search()
+     elif select == "7":
+        print("exit.......")
         break
 
      else:
